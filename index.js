@@ -6,8 +6,34 @@ const cheerio = require("cheerio")
 // 指定文件夹路径
 const binPath = path.join(__dirname, 'bins.csv');
 let bins;
-
+function LoadBins() {
+    if (!fs.existsSync(binPath)) {
+        throw new Error("The bins.csv file does not exist.")
+    }
+    if (bins) return bins;
+    const objs = {};
+    fs.readFileSync(binPath).toString("utf8").split("\n").forEach(x => {
+        const arr = x.trim().split(",").map(x => decodeURIComponent(x.trim()));
+        const bin = {
+            bin: arr[0],
+            card_brand: arr[1],
+            card_type: arr[2],
+            card_level: arr[3],
+            bank_name: arr[4],
+            bank_website: arr[5],
+            bank_phone: arr[6],
+            country_name: arr[7],
+            country_code: arr[8],
+            country_iso3: arr[9],
+            currency: arr[10],
+        }
+        objs[bin.bin] = bin;
+    })
+    bins = objs;
+    return objs;
+}
 async function WebFindBin(bin) {
+    bin=ToBin(bin);
     do {
         try {
             return await axios.get("https://bincheck.io/zh/details/" + bin, {
@@ -43,46 +69,26 @@ async function WebFindBin(bin) {
         }
     } while (true)
 }
+function ToBin(card){
+    return (card+"").substring(0,6)
+}
 
 module.exports = {
-    loadBins() {
-        if (!fs.existsSync(binPath)) {
-            throw new Error("The bins.csv file does not exist.")
-        }
-        if (bins) return bins;
-        const objs = {};
-        fs.readFileSync(binPath).toString("utf8").split("\n").forEach(x => {
-            const arr = x.trim().split(",").map(x => x.trim());
-            const bin = {
-                bin: arr[0],
-                card_brand: arr[1],
-                card_type: arr[2],
-                card_level: arr[3],
-                bank_name: arr[4],
-                bank_website: arr[5],
-                bank_phone: arr[6],
-                country_name: arr[7],
-                country_code: arr[8],
-                country_iso3: arr[9],
-                currency: arr[10],
-            }
-            objs[bin.bin] = bin;
-        })
-        bins = objs;
-        return objs;
-    },
+    LoadBins,
     async FindBin(bin){
+        bin=ToBin(bin);
         let data=this.LocalFindBin(bin)
         if(!data){
             data=await WebFindBin(bin)
         }
         return data;
     },
-    LocalFindBin(_bin) {
+    LocalFindBin(bin) {
+        bin=ToBin(bin);
         if (!bins) {
-            this.loadBins()
+            LoadBins()
         }
-        return bins[_bin]
+        return bins[bin]
     },
     WebFindBin
 }

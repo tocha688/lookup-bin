@@ -27,7 +27,7 @@ fs.readdir(dirPath, (err, files) => {
                         k, td.card.brand, td.card.type, td.card.level,
                         td.bank.name, td.bank.website, td.bank.phone,
                         td.country.name, td.country.code, td.country.iso3, td.country.currency
-                    ].join(",")
+                    ].map(x=>x?encodeURIComponent(x):x).join(",")
                 } catch (e) {
                     console.log(k, td)
                     process.exit()
