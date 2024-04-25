@@ -74,6 +74,7 @@ function ToBin(card){
 }
 
 module.exports = {
+    ToBin,
     LoadBins,
     async FindBin(bin){
         bin=ToBin(bin);
