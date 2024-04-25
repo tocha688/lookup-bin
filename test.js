@@ -1,4 +1,4 @@
-const lookupbin=require("./index")
+const lookupBin=require("./index")
 
-console.log(lookupbin.LocalFindBin("440393"))
-console.log(lookupbin.LocalFindBin("440022"))
+console.log(lookupBin.LocalFindBin("440393"))
+console.log(lookupBin.LocalFindBin("440022"))
