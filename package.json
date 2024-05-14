@@ -4,7 +4,7 @@
     "cheerio": "^1.0.0-rc.12"
   },
   "name": "lookup-bin",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "index.js",
   "license": "MIT",
   "bin":"./index.js",

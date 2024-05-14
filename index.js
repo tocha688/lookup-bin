@@ -5,12 +5,11 @@ const cheerio = require("cheerio")
 
 // 指定文件夹路径
 const binPath = path.join(__dirname, 'bins.csv');
-let bins=global.lookupBins=global.lookupBins;
 function LoadBins() {
     if (!fs.existsSync(binPath)) {
         throw new Error("The bins.csv file does not exist.")
     }
-    if (bins) return bins;
+    // if (bins) return bins;
     const objs = {};
     fs.readFileSync(binPath).toString("utf8").split("\n").forEach(x => {
         const arr = x.trim().split(",").map(x => decodeURIComponent(x.trim()));
@@ -29,11 +28,12 @@ function LoadBins() {
         }
         objs[bin.bin] = bin;
     })
-    bins = objs;
     return objs;
 }
+let bins = global.lookupBins = global.lookupBins || LoadBins();
+
 async function WebFindBin(bin) {
-    bin=ToBin(bin);
+    bin = ToBin(bin);
     do {
         try {
             return await axios.get("https://bincheck.io/zh/details/" + bin, {
@@ -48,12 +48,12 @@ async function WebFindBin(bin) {
                         return {
                             bin,
                             card_brand: $(".overflow-x-auto table").eq(0).find("tr").eq(1).find("td").eq(1).text().trim().replace("------", ""),
-                            card_type:$(".overflow-x-auto table").eq(0).find("tr").eq(2).find("td").eq(1).text().trim().replace("------", ""),
+                            card_type: $(".overflow-x-auto table").eq(0).find("tr").eq(2).find("td").eq(1).text().trim().replace("------", ""),
                             card_level: $(".overflow-x-auto table").eq(0).find("tr").eq(3).find("td").eq(1).text().trim().replace("------", ""),
-                            bank_name:$(".overflow-x-auto table").eq(0).find("tr").eq(4).find("td").eq(1).text().trim().replace("------", ""),
+                            bank_name: $(".overflow-x-auto table").eq(0).find("tr").eq(4).find("td").eq(1).text().trim().replace("------", ""),
                             bank_website: $(".overflow-x-auto table").eq(0).find("tr").eq(5).find("td").eq(1).text().trim().replace("------", ""),
                             bank_phone: $(".overflow-x-auto table").eq(0).find("tr").eq(6).find("td").eq(1).text().trim().replace("------", ""),
-                            country_name:$(".overflow-x-auto table").eq(1).find("tr").eq(0).find("td").eq(1).text().trim().replace("------", ""),
+                            country_name: $(".overflow-x-auto table").eq(1).find("tr").eq(0).find("td").eq(1).text().trim().replace("------", ""),
                             country_code: $(".overflow-x-auto table").eq(1).find("tr").eq(2).find("td").eq(1).text().trim().replace("------", ""),
                             country_iso3: $(".overflow-x-auto table").eq(1).find("tr").eq(3).find("td").eq(1).text().trim().replace("------", ""),
                             currency: $(".overflow-x-auto table").eq(1).find("tr").eq(4).find("td").eq(1).text().trim().replace("------", ""),
@@ -69,23 +69,23 @@ async function WebFindBin(bin) {
         }
     } while (true)
 }
-function ToBin(card){
-    return (card+"").substring(0,6)
+function ToBin(card) {
+    return (card + "").substring(0, 6)
 }
 
 module.exports = {
     ToBin,
     LoadBins,
-    async FindBin(bin){
-        bin=ToBin(bin);
-        let data=this.LocalFindBin(bin)
-        if(!data){
-            data=await WebFindBin(bin)
+    async FindBin(bin) {
+        bin = ToBin(bin);
+        let data = this.LocalFindBin(bin)
+        if (!data) {
+            data = await WebFindBin(bin)
         }
         return data;
     },
     LocalFindBin(bin) {
-        bin=ToBin(bin);
+        bin = ToBin(bin);
         if (!bins) {
             LoadBins()
         }
