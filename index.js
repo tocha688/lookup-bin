@@ -5,7 +5,7 @@ const cheerio = require("cheerio")
 
 // 指定文件夹路径
 const binPath = path.join(__dirname, 'bins.csv');
-let bins;
+let bins=global.lookupBins=global.lookupBins;
 function LoadBins() {
     if (!fs.existsSync(binPath)) {
         throw new Error("The bins.csv file does not exist.")
