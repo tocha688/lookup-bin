@@ -1,13 +1,15 @@
 {
   "dependencies": {
     "axios": "^1.6.8",
-    "cheerio": "^1.0.0-rc.12"
+    "cheerio": "^1.0.0-rc.12",
+    "https-proxy-agent": "^7.0.5",
+    "p-limit": "^3.1.0"
   },
   "name": "lookup-bin",
   "version": "1.0.3",
   "main": "index.js",
   "license": "MIT",
-  "bin":"./index.js",
+  "bin": "./index.js",
   "files": [
     "index.js",
     "bins.csv"
