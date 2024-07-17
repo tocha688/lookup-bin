@@ -54,5 +54,5 @@ async function pullMain(start, end, size) {
     console.log("运行完成")
 }
 
-pullMain(618377, 699999, 50)
+pullMain(620896, 699999, 50)
 // ProxyLoad()
