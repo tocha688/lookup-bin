@@ -42,7 +42,7 @@ async function pullMain(start, end, size) {
                     }
                     break
                 } catch (e) {
-                    console.log("错误重试",index,e.message)
+                    console.log("错误重试", index, e.message)
                 }
             } while (true)
         }))
@@ -53,6 +53,43 @@ async function pullMain(start, end, size) {
     clearInterval(timer)
     console.log("运行完成")
 }
+async function pullMain2(size) {
+    const limit = pLimit(size);
+    //一个任务10000数据
+    let waits = [];
+    let timer = setInterval(() => {
+        lookup.SaveBins()
+        ProxyLoad()
+    }, 1000 * 5)
+    await ProxyLoad()
+    let ok = 0;
+    const bins = lookup.GetBins();
+    const binKeys=Object.keys(bins);
+    binKeys.forEach(bin => waits.push(limit(async () => {
+        do {
+            try {
+                const xurl = "http://yizhiyan:1.yizhiyan@" + proxys.pop();
+                const data = await lookup.WebFindBin(bin, {
+                    httpsAgent: new HttpsProxyAgent(xurl)
+                })
+                ok++
+                if (data) {
+                    console.log("有效", bin, ok + "/" + binKeys.length)
+                } else {
+                    console.log("无效", bin, ok + "/" + binKeys.length)
+                }
+                break
+            } catch (e) {
+                console.log("错误重试", bin, e.message)
+            }
+        } while (true)
+    })))
+    console.log("启动完毕", waits.length)
+    await Promise.all(waits)
+    lookup.SaveBins()
+    clearInterval(timer)
+    console.log("运行完成")
+}
 
-pullMain(300000, 699999, 200)
+pullMain2(10)
 // ProxyLoad()

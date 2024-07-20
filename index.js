@@ -106,5 +106,8 @@ module.exports = {
         }
         return bins[bin]
     },
-    WebFindBin
+    WebFindBin,
+    GetBins(){
+        return bins;
+    }
 }

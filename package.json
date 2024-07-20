@@ -6,7 +6,7 @@
     "p-limit": "^3.1.0"
   },
   "name": "lookup-bin",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "index.js",
   "license": "MIT",
   "bin": "./index.js",

@@ -1,8 +1,8 @@
 const lookupBin=require("./index")
 
-console.log(lookupBin.LocalFindBin("440393"))
-console.log(lookupBin.LocalFindBin("440022"))
+// console.log(lookupBin.WebFindBin("414720"))
+console.log(lookupBin.LocalFindBin("414720"))
 
-// lookupBin.WebFindBin("440393").then(x=>{
-//     console.log(x)
-// })
+lookupBin.WebFindBin("414720").then(x=>{
+    console.log(x)
+})
